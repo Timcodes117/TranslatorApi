@@ -17,13 +17,14 @@ def index():
     '''
 
 
-@app.route('/get_translation')
+@app.route('/get_translation', methods=["POST", "GET"])
 def get_translation_data():
-    sentence = request.form['sentence']
-    language = request.form['target-language']
+    sentence = str(request.form['sentence'])
+    language = str(request.form['target-language'])
+    source = str(request.form["src"])
     if sentence and language:
-        result = get_translation.get_translations(sentence, language)
-        if result['status'] == 200:
+        result = get_translation.get_translations(sentence, language, source)
+        if result['status'] == "200":
             return jsonify(result), 200
         else:
             return jsonify(result), 400
@@ -31,7 +32,7 @@ def get_translation_data():
         return jsonify({"message": "sentence or language is not sent"}), 400
 
 
-@app.route('/get_language_data')
+@app.route('/get_language_data', methods=["GET"])
 def get_languages():
     lang_list = supported_languges.get_supported_languages()
     if lang_list:
@@ -41,4 +42,4 @@ def get_languages():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, host="0.0.0.0")

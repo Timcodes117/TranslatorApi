@@ -13,23 +13,30 @@ def language_is_verified(lang):
         return False
 
 
-def get_translations(sentence: str, language: str):
+def verify_source(target):
+    if target != "" and target != "auto":
+        return target
+    else:
+        return "auto"
+
+
+def get_translations(sentence: str, language: str, target: str):
     try:
         if language_is_verified(language):
             print("language is available")
             if len(sentence) < char_limit:
                 print("sentence is okay")
-                translated_text = GoogleTranslator(source="auto", target=language).translate(sentence)
-                return {"message": translated_text, "status": 200}
+                translated_text = GoogleTranslator(source=verify_source(target), target=language).translate(sentence)
+                return {"message": translated_text, "status": "200"}
             else:
                 raise ValueError(f"sentence should contain less than less than 10000 characters. this contains {len(sentence)}")
         else:
             raise ValueError("language is not available")
     except Exception as err:
-        return {"message": "failed to get result", "error": err, "status": 400}
+        return {"message": "failed to get result", "error": err, "status": "400"}
 
 
-print(lang_list)
+# print(lang_list)
 
 
 # result = get_translation("good evening", "af")
